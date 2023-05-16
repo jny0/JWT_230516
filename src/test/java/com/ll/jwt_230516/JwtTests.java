@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,5 +57,20 @@ class JwtTests {
         SecretKey secretKey2 = jwtProvider.getSecretKey();
 
         assertThat(secretKey1 == secretKey2).isTrue(); // 같은 객체를 가리킴
+    }
+
+    @Test
+    @DisplayName("accessToken 을 얻는다.")
+    void t5() {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", 1L);
+        claims.put("username", "admin");
+
+        // 지금으로부터 5시간의 유효기간을 가지는 토큰을 생성
+        String accessToken = jwtProvider.genToken(claims, 60 * 60 * 5);
+
+        System.out.println("accessToken : " + accessToken);
+
+        assertThat(accessToken).isNotNull();
     }
 }
